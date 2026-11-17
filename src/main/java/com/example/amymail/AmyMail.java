@@ -67,7 +67,7 @@ public class AmyMail implements ClientModInitializer {
                         if (client.getConnection() != null) {
                             List<String> names = new ArrayList<>();
                             for (PlayerInfo info : client.getConnection().getOnlinePlayers()) {
-                                names.add(info.getProfile().getName());
+                                names.add(info.getProfile().name());
                             }
                             return SharedSuggestionProvider.suggest(names, builder);
                         }
@@ -82,9 +82,8 @@ public class AmyMail implements ClientModInitializer {
                             if (isPlayerOnline(client, target)) {
                                 sendWhisper(client, target, msg);
                                 if (client.player != null) {
-                                    client.player.displayClientMessage(
-                                        Component.literal("§5✦ §dAmyMail §8» §6You -> " + target + ": §e" + msg),
-                                        false
+                                    client.player.sendSystemMessage(
+                                        Component.literal("§5✦ §dAmyMail §8» §6You -> " + target + ": §e" + msg)
                                     );
                                 }
                             } else {
@@ -93,9 +92,8 @@ public class AmyMail implements ClientModInitializer {
                                 saveOutbox(client, queue);
 
                                 if (client.player != null) {
-                                    client.player.displayClientMessage(
-                                        Component.literal("§5✦ §dAmyMail §8» §6Queued for " + target + " (offline): §e" + msg),
-                                        false
+                                    client.player.sendSystemMessage(
+                                        Component.literal("§5✦ §dAmyMail §8» §6Queued for " + target + " (offline): §e" + msg)
                                     );
                                 }
                             }
@@ -114,39 +112,34 @@ public class AmyMail implements ClientModInitializer {
                     List<MailEntry> inbox = loadInbox(client);
 
                     if (inbox.isEmpty()) {
-                        client.player.displayClientMessage(
-                            Component.literal("§5✦ §dAmyMail §8» §7Your private mailbox is empty."),
-                            false
+                        client.player.sendSystemMessage(
+                            Component.literal("§5✦ §dAmyMail §8» §7Your private mailbox is empty.")
                         );
                         return 1;
                     }
 
-                    client.player.displayClientMessage(
-                        Component.literal("§5╭─── §d✦ AmyMail §8• §7Inbox for §d" + client.player.getName().getString() + " §5───"),
-                        false
+                    client.player.sendSystemMessage(
+                        Component.literal("§5╭─── §d✦ AmyMail §8• §7Inbox for §d" + client.player.getName().getString() + " §5───")
                     );
 
                     int count = 0;
                     for (MailEntry mail : inbox) {
                         if (mail.ownerUuid != null && mail.ownerUuid.equals(currentUuid.toString())) {
                             count++;
-                            client.player.displayClientMessage(
-                                Component.literal("§5│ §8[" + mail.timestamp + "] §6" + mail.content),
-                                false
+                            client.player.sendSystemMessage(
+                                Component.literal("§5│ §8[" + mail.timestamp + "] §6" + mail.content)
                             );
                         }
                     }
 
                     if (count == 0) {
-                        client.player.displayClientMessage(
-                            Component.literal("§5│ §7No messages found for your account."),
-                            false
+                        client.player.sendSystemMessage(
+                            Component.literal("§5│ §7No messages found for your account.")
                         );
                     }
 
-                    client.player.displayClientMessage(
-                        Component.literal("§5╰────────────────────────────────────"),
-                        false
+                    client.player.sendSystemMessage(
+                        Component.literal("§5╰────────────────────────────────────")
                     );
                     return 1;
                 })
@@ -156,9 +149,8 @@ public class AmyMail implements ClientModInitializer {
                         if (client.player == null) return 0;
 
                         saveInbox(client, new ArrayList<>());
-                        client.player.displayClientMessage(
-                            Component.literal("§5✦ §dAmyMail §8» §7Your mailbox has been cleared."),
-                            false
+                        client.player.sendSystemMessage(
+                            Component.literal("§5✦ §dAmyMail §8» §7Your mailbox has been cleared.")
                         );
                         return 1;
                     })
@@ -173,14 +165,12 @@ public class AmyMail implements ClientModInitializer {
 
                         List<String> ignored = loadIgnored(client);
                         if (ignored.isEmpty()) {
-                            client.player.displayClientMessage(
-                                Component.literal("§5✦ §dAmyMail §8» §7Your ignore list is empty."),
-                                false
+                            client.player.sendSystemMessage(
+                                Component.literal("§5✦ §dAmyMail §8» §7Your ignore list is empty.")
                             );
                         } else {
-                            client.player.displayClientMessage(
-                                Component.literal("§5✦ §dAmyMail §8» §7Ignored players: §d" + String.join("§7, §d", ignored)),
-                                false
+                            client.player.sendSystemMessage(
+                                Component.literal("§5✦ §dAmyMail §8» §7Ignored players: §d" + String.join("§7, §d", ignored))
                             );
                         }
                         return 1;
@@ -192,7 +182,7 @@ public class AmyMail implements ClientModInitializer {
                         if (client.getConnection() != null) {
                             List<String> names = new ArrayList<>();
                             for (PlayerInfo info : client.getConnection().getOnlinePlayers()) {
-                                names.add(info.getProfile().getName());
+                                names.add(info.getProfile().name());
                             }
                             return SharedSuggestionProvider.suggest(names, builder);
                         }
@@ -208,16 +198,14 @@ public class AmyMail implements ClientModInitializer {
 
                         if (removed) {
                             saveIgnored(client, ignored);
-                            client.player.displayClientMessage(
-                                Component.literal("§5✦ §dAmyMail §8» §7Removed §d" + target + " §7from your ignore list."),
-                                false
+                            client.player.sendSystemMessage(
+                                Component.literal("§5✦ §dAmyMail §8» §7Removed §d" + target + " §7from your ignore list.")
                             );
                         } else {
                             ignored.add(target);
                             saveIgnored(client, ignored);
-                            client.player.displayClientMessage(
-                                Component.literal("§5✦ §dAmyMail §8» §7Added §d" + target + " §7to your ignore list."),
-                                false
+                            client.player.sendSystemMessage(
+                                Component.literal("§5✦ §dAmyMail §8» §7Added §d" + target + " §7to your ignore list.")
                             );
                         }
                         return 1;
@@ -235,7 +223,7 @@ public class AmyMail implements ClientModInitializer {
 
             Set<String> currentOnline = new HashSet<>();
             for (PlayerInfo info : client.getConnection().getOnlinePlayers()) {
-                currentOnline.add(info.getProfile().getName().toLowerCase());
+                currentOnline.add(info.getProfile().name().toLowerCase());
             }
 
             List<OutboxEntry> queue = loadOutbox(client);
@@ -250,16 +238,14 @@ public class AmyMail implements ClientModInitializer {
                     if (currentOnline.contains(recipientLower)) {
                         if (!PREVIOUS_ONLINE.contains(recipientLower)) {
                             client.player.playSound(SoundEvents.AMETHYST_BLOCK_BREAK, 1.0F, 1.2F);
-                            client.player.displayClientMessage(
-                                Component.literal("§5✦ §dAmyMail §8» §d" + entry.recipient + " §7is now online!"),
-                                false
+                            client.player.sendSystemMessage(
+                                Component.literal("§5✦ §dAmyMail §8» §d" + entry.recipient + " §7is now online!")
                             );
                         }
 
                         sendWhisper(client, entry.recipient, entry.content);
-                        client.player.displayClientMessage(
-                            Component.literal("§5✦ §dAmyMail §8» §6Delivered to " + entry.recipient + ": §e" + entry.content),
-                            false
+                        client.player.sendSystemMessage(
+                            Component.literal("§5✦ §dAmyMail §8» §6Delivered to " + entry.recipient + ": §e" + entry.content)
                         );
                         iterator.remove();
                         changed = true;
@@ -288,7 +274,7 @@ public class AmyMail implements ClientModInitializer {
     private boolean isPlayerOnline(Minecraft client, String playerName) {
         if (client.getConnection() == null) return false;
         for (PlayerInfo info : client.getConnection().getOnlinePlayers()) {
-            if (info.getProfile().getName().equalsIgnoreCase(playerName)) {
+            if (info.getProfile().name().equalsIgnoreCase(playerName)) {
                 return true;
             }
         }
@@ -339,9 +325,8 @@ public class AmyMail implements ClientModInitializer {
         if (isWhisperToMe) {
             client.player.playSound(SoundEvents.AMETHYST_BLOCK_BREAK, 1.0F, 1.0F);
 
-            client.player.displayClientMessage(
-                Component.literal("§5✦ §dAmyMail §8» §6" + rawText),
-                false
+            client.player.sendSystemMessage(
+                Component.literal("§5✦ §dAmyMail §8» §6" + rawText)
             );
 
             String ownerUuid = client.player.getUUID().toString();
