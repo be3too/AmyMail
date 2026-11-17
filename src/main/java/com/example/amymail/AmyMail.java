@@ -10,7 +10,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +28,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 public class AmyMail implements ModInitializer {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -84,7 +85,7 @@ public class AmyMail implements ModInitializer {
                                     return 0;
                                 }
 
-                                onlineTarget.playNotifySound(SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.MASTER, 1.0F, 1.0F);
+                                playAmethystSound(onlineTarget, 1.0F);
                                 onlineTarget.sendSystemMessage(
                                     Component.literal("§5✦ §dAmyMail §8» §6" + sender.getName().getString() + " -> You: §6" + msg)
                                 );
@@ -260,7 +261,7 @@ public class AmyMail implements ModInitializer {
             }
 
             if (!pending.isEmpty()) {
-                player.playNotifySound(SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.MASTER, 1.0F, 1.2F);
+                playAmethystSound(player, 1.2F);
                 player.sendSystemMessage(
                     Component.literal("§5✦ §dAmyMail §8» §7You received §d" + pending.size() + " §7new message(s) while offline:")
                 );
@@ -272,6 +273,19 @@ public class AmyMail implements ModInitializer {
                 }
             }
         });
+    }
+
+    private void playAmethystSound(ServerPlayer player, float pitch) {
+        player.connection.send(new ClientboundSoundPacket(
+            BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.AMETHYST_BLOCK_BREAK),
+            SoundSource.MASTER,
+            player.getX(),
+            player.getY(),
+            player.getZ(),
+            1.0F,
+            pitch,
+            player.level().getRandom().nextLong()
+        ));
     }
 
     private Path getConfigDir() {
