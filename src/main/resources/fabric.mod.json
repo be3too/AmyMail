@@ -1,31 +1,20 @@
 {
-	"schemaVersion": 1,
-	"id": "amymail",
-	"version": "${version}",
-	"name": "AmyMail",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Me!"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/amymail/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.example.amymail.AmyMail"
-		]
-	},
-	"mixins": [
-		"amymail.mixins.json"
-	],
-	"depends": {
-		"fabricloader": ">=0.20.1",
-		"minecraft": ">=26.1 <=26.3",
-		"java": ">=25",
-		"fabric-api": "*"
-	}
+  "schemaVersion": 1,
+  "id": "amymail",
+  "version": "1.0.0",
+  "name": "AmyMail",
+  "description": "Private amethyst-themed mailbox and offline messaging.",
+  "authors": ["be3too"],
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.be3too.amymail.AmyMailClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": ">=26.1 <=26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
 }
