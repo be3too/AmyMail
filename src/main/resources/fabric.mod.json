@@ -3,12 +3,12 @@
   "id": "amymail",
   "version": "1.0.0",
   "name": "AmyMail",
-  "description": "Private amethyst-themed mailbox and offline messaging.",
+  "description": "Server-side mailbox and offline messaging mod.",
   "authors": ["be3too"],
-  "environment": "client",
+  "environment": "server",
   "entrypoints": {
-    "client": [
-      "com.be3too.amymail.AmyMailClient"
+    "main": [
+      "com.example.amymail.AmyMail"
     ]
   },
   "depends": {
